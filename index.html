@@ -1,0 +1,122 @@
+<!-- Vibe Coding Lab: Mood Board Generator -->
+<!-- Starter index.html for a fun, browser-based exercise -->
+<!-- Students will orchestrate AI to help build a mood board app that uses localStorage and allows adding images, notes, and color swatches -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vibe Mood Board</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f0f0f0;
+    }
+    h1 {
+      text-align: center;
+    }
+    #board {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+    .card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      padding: 1rem;
+      max-width: 200px;
+    }
+    .card img {
+      max-width: 100%;
+      border-radius: 4px;
+    }
+    .controls {
+      margin: 1rem auto;
+      text-align: center;
+    }
+    input, button, textarea {
+      margin: 0.25rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>My Mood Board</h1>
+  <div class="controls">
+    <input type="text" id="imgUrl" placeholder="Image URL">
+    <input type="color" id="colorPick">
+    <textarea id="note" placeholder="Add a note..."></textarea>
+    <button onclick="addCard()">Add</button>
+    <button onclick="exportBoard()">Export JSON</button>
+    <input type="file" id="importFile" accept="application/json">
+  </div>
+  <div id="board"></div>
+
+  <script>
+    const board = document.getElementById('board');
+    const importFile = document.getElementById('importFile');
+
+    function addCard() {
+      const url = document.getElementById('imgUrl').value;
+      const color = document.getElementById('colorPick').value;
+      const note = document.getElementById('note').value;
+
+      const card = { url, color, note };
+      saveCard(card);
+      renderCard(card);
+
+      document.getElementById('imgUrl').value = '';
+      document.getElementById('note').value = '';
+    }
+
+    function renderCard(card) {
+      const div = document.createElement('div');
+      div.className = 'card';
+      div.innerHTML = `
+        <div style="background:${card.color}; height:20px; width:100%; margin-bottom:5px;"></div>
+        <img src="${card.url}" alt="Mood Image">
+        <p>${card.note}</p>
+      `;
+      board.appendChild(div);
+    }
+
+    function saveCard(card) {
+      const cards = JSON.parse(localStorage.getItem('moodCards') || '[]');
+      cards.push(card);
+      localStorage.setItem('moodCards', JSON.stringify(cards));
+    }
+
+    function loadBoard() {
+      const cards = JSON.parse(localStorage.getItem('moodCards') || '[]');
+      cards.forEach(renderCard);
+    }
+
+    function exportBoard() {
+      const data = localStorage.getItem('moodCards');
+      const blob = new Blob([data], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'moodboard.json';
+      a.click();
+    }
+
+    importFile.addEventListener('change', e => {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = event => {
+        localStorage.setItem('moodCards', event.target.result);
+        board.innerHTML = '';
+        loadBoard();
+      };
+      reader.readAsText(file);
+    });
+
+    loadBoard();
+  </script>
+</body>
+</html>
