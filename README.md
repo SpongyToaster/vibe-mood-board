@@ -1,8 +1,7 @@
-# 🎨 Vibe Mood Board Generator  
+# 🎨 Vibe Mood Board
 
-[![Live Demo](https://img.shields.io/badge/🎨 TRY_IT_OUT-Click_here-yellowgreen?style=for-the-badge)](https://spongytoaster.github.io/vibe-mood-board/)
-_A 2-hour browser-based coding adventure with help from AI tools_
-
+[![Live Demo](https://img.shields.io/badge/🎨_TRY_IT_OUT-Click_here-yellowgreen?style=for-the-badge)](https://spongytoaster.github.io/vibe-mood-board/)
+*A single-file, JavaScript mood board for personal refelction.*
 ---
 
 ## 📚 Overview
